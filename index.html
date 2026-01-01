@@ -3,354 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OEM / In-House BAS Quote Builder</title>
+    <title>Cypher Controls Estimate</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --highlight: #e74c3c; /* Red for Custom/OEM vibe */
-            --success: #27ae60;
-            --bg: #f4f7f6;
-            --card: #ffffff;
+            --primary: #0f172a; /* Cypher Dark Blue/Black */
+            --accent: #0ea5e9; /* Cyber Blue */
+            --bg: #f8fafc;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Header */
-        header {
-            grid-column: 1 / -1;
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            border-bottom: 5px solid var(--highlight);
-            text-align: center;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         
-        .badge {
-            background: var(--highlight);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-            display: inline-block;
-        }
-
-        /* Inputs */
-        .panel {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        /* Header Branding */
+        .header { display: flex; justify-content: space-between; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        .brand h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; color: var(--primary); text-transform: uppercase; }
+        .brand span { color: var(--accent); }
+        .sub-brand { font-size: 0.9rem; color: #64748b; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
         
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        /* Inputs (Hidden on Print) */
+        .controls { background: #f1f5f9; padding: 20px; margin-bottom: 30px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #64748b; }
+        .input-group input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; }
         
-        .row { display: flex; gap: 15px; }
-        .col { flex: 1; }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
+        /* Quote Table */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th { text-align: left; background: var(--primary); color: white; padding: 12px; font-size: 0.9rem; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        .total-row td { border-top: 2px solid var(--primary); font-weight: bold; font-size: 1.1rem; }
         
-        input:focus { border-color: var(--highlight); outline: none; }
-
-        .hint { font-size: 0.75rem; color: #666; margin-top: 3px; }
-
-        /* Output / Quote */
-        .quote-preview {
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 0;
-        }
+        .footer { text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 50px; }
         
-        .quote-header {
-            background: #eee;
-            padding: 15px;
-            font-weight: bold;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .line-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .line-item:last-child { border-bottom: none; }
-        
-        .item-name { font-weight: 500; }
-        .item-desc { font-size: 0.8rem; color: #777; }
-
-        .total-section {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        /* Profit Box */
-        .profit-box {
-            background: #e8f8f5;
-            border: 2px solid var(--success);
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .profit-amount {
-            color: var(--success);
-            font-size: 2rem;
-            font-weight: bold;
-            display: block;
-        }
-        .profit-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #555; }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--highlight);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        button:hover { background: #c0392b; }
-
         @media print {
-            .input-section, button { display: none; }
-            .container { display: block; }
-            .panel { box-shadow: none; border: 1px solid #000; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; }
+            .controls, button { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Proprietary BAS Quote Builder</h1>
-    <div class="badge">In-House Manufacturing Edition</div>
-</header>
-
 <div class="container">
-    
-    <div class="panel input-section">
-        <h2>1. The Controller (Your IP)</h2>
-        <div class="row">
-            <div class="col input-group">
-                <label>Hardware COST (Pi+Parts)</label>
-                <input type="number" id="hwCost" value="150" oninput="calc()">
-                <div class="hint">What YOU pay per unit</div>
-            </div>
-            <div class="col input-group">
-                <label>Hardware SELL Price</label>
-                <input type="number" id="hwSell" value="1200" oninput="calc()">
-                <div class="hint">What THEY pay (Market Value)</div>
-            </div>
+    <div class="header">
+        <div class="brand">
+            <h1>Cypher<span>.</span></h1>
+            <div class="sub-brand">Intelligent Building Automation</div>
         </div>
-        <div class="input-group">
-            <label>Controller Quantity</label>
-            <input type="number" id="qty" value="1" oninput="calc()">
-        </div>
-
-        <h2>2. Software & Licensing</h2>
-        <div class="row">
-            <div class="col input-group">
-                <label>Site License Fee ($)</label>
-                <input type="number" id="licenseFee" value="1500" oninput="calc()">
-                <div class="hint">Pure profit "Activation Fee"</div>
-            </div>
-            <div class="col input-group">
-                <label>Annual Subscription ($/yr)</label>
-                <input type="number" id="subFee" value="600" oninput="calc()">
-                <div class="hint">Updates / Remote Access</div>
-            </div>
-        </div>
-
-        <h2>3. IO & Installation</h2>
-        <div class="row">
-            <div class="col input-group">
-                <label>Total IO Points</label>
-                <input type="number" id="points" value="20" oninput="calc()">
-            </div>
-            <div class="col input-group">
-                <label>IO Hardware Cost ($/pt)</label>
-                <input type="number" id="ioCost" value="15" oninput="calc()">
-                <div class="hint">Modbus cards/HATs cost</div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col input-group">
-                <label>Install/Eng Labor (Hours)</label>
-                <input type="number" id="hours" value="16" oninput="calc()">
-            </div>
-            <div class="col input-group">
-                <label>Labor Rate ($/hr)</label>
-                <input type="number" id="rate" value="145" oninput="calc()">
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label>Parts/Labor Markup %</label>
-            <input type="number" id="markup" value="40" oninput="calc()">
-            <div class="hint">Applies to IO Cards & Labor only</div>
+        <div style="text-align: right;">
+            <div><strong>Estimate #1042</strong></div>
+            <div>Date: <span id="dateDisplay"></span></div>
         </div>
     </div>
 
-    <div class="panel">
-        <h2>Quote Preview</h2>
-        
-        <div class="quote-preview">
-            <div class="quote-header">Project Estimate</div>
-            
-            <div class="line-item">
-                <div>
-                    <div class="item-name">Edge Automation Controller</div>
-                    <div class="item-desc" id="txtQty">1 Unit @ $1,200.00 ea</div>
-                </div>
-                <div id="outHwTotal">$1,200.00</div>
-            </div>
-
-            <div class="line-item">
-                <div>
-                    <div class="item-name">Site Software License</div>
-                    <div class="item-desc">Unlimited Points / Web Interface</div>
-                </div>
-                <div id="outLicense">$1,500.00</div>
-            </div>
-
-            <div class="line-item">
-                <div>
-                    <div class="item-name">IO Hardware & Sensors</div>
-                    <div class="item-desc" id="txtIO">Modbus IO Modules / Wiring</div>
-                </div>
-                <div id="outIO">$420.00</div>
-            </div>
-
-            <div class="line-item">
-                <div>
-                    <div class="item-name">Installation & Commissioning</div>
-                    <div class="item-desc" id="txtLabor">16 Hours</div>
-                </div>
-                <div id="outLabor">$3,248.00</div>
-            </div>
-
-            <div class="total-section">
-                <span>TOTAL PROJECT</span>
-                <span id="grandTotal">$6,368.00</span>
-            </div>
+    <div class="controls">
+        <div class="input-group">
+            <label>Cypher Core Price ($)</label>
+            <input type="number" id="corePrice" value="1200" oninput="calc()">
         </div>
-
-        <div class="profit-box">
-            <span class="profit-label">Estimated Net Profit</span>
-            <span class="profit-amount" id="netProfit">$0.00</span>
-            <div style="font-size:0.8rem; margin-top:5px; color:#555;">
-                Margin: <span id="marginPercent">0%</span>
-            </div>
+        <div class="input-group">
+            <label>Cypher OS License ($)</label>
+            <input type="number" id="osPrice" value="1500" oninput="calc()">
         </div>
-        
-        <div style="margin-top:15px; padding:10px; background:#f9f9f9; border-radius:4px; font-size:0.9rem;">
-            <strong>Recurring Revenue (ARR):</strong> <span id="outArr" style="color:var(--success); font-weight:bold;">$600.00 /yr</span>
+        <div class="input-group">
+            <label>Number of Units/Zones</label>
+            <input type="number" id="units" value="5" oninput="calc()">
         </div>
+        <div class="input-group">
+            <label>Install Labor (Hours)</label>
+            <input type="number" id="laborHours" value="20" oninput="calc()">
+        </div>
+        <div class="input-group">
+            <label>Labor Rate ($/hr)</label>
+            <input type="number" id="rate" value="145" oninput="calc()">
+        </div>
+        <button onclick="window.print()" style="grid-column: span 3; background: var(--accent); color: white; border: none; padding: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">PRINT PROPOSAL</button>
+    </div>
 
-        <button onclick="window.print()">Print Quote</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th style="width: 100px; text-align: center;">Qty</th>
+                <th style="text-align: right;">Line Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <strong>Cypher Core X1 Controller</strong><br>
+                    <small>Primary logic controller, web server, and database host.</small>
+                </td>
+                <td style="text-align: center;">1</td>
+                <td style="text-align: right;" id="outCore">$1,200.00</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Cypher OS Site License</strong><br>
+                    <small>Unlimited points license, user interface, and local history database.</small>
+                </td>
+                <td style="text-align: center;">1</td>
+                <td style="text-align: right;" id="outOS">$1,500.00</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Cypher I/O Expansion & Sensors</strong><br>
+                    <small>Interface cards and sensors for <span id="outUnitsCount">5</span> zones.</small>
+                </td>
+                <td style="text-align: center;">1</td>
+                <td style="text-align: right;" id="outIO">$500.00</td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Engineering & Installation</strong><br>
+                    <small>Panel fabrication, programming, mounting, and commissioning.</small>
+                </td>
+                <td style="text-align: center;" id="outHours">20 hrs</td>
+                <td style="text-align: right;" id="outLabor">$2,900.00</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="2" style="text-align: right;">PROJECT TOTAL</td>
+                <td style="text-align: right;" id="outTotal">$6,100.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="background: #f8fafc; padding: 20px; border-left: 4px solid var(--accent);">
+        <strong>Annual Software Maintenance (SMA):</strong> Includes remote tunneling, security patches, and database optimization.
+        <div style="float: right; font-weight: bold;">$600.00 / yr</div>
+    </div>
+
+    <div class="footer">
+        Valid for 30 days. Proprietary technology of Cypher Automation.
     </div>
 </div>
 
 <script>
-    const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+    document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString();
 
     function calc() {
-        // Inputs
-        const hwCost = parseFloat(document.getElementById('hwCost').value) || 0;
-        const hwSell = parseFloat(document.getElementById('hwSell').value) || 0;
-        const qty = parseFloat(document.getElementById('qty').value) || 1;
-        
-        const licenseFee = parseFloat(document.getElementById('licenseFee').value) || 0;
-        const subFee = parseFloat(document.getElementById('subFee').value) || 0;
-        
-        const points = parseFloat(document.getElementById('points').value) || 0;
-        const ioCost = parseFloat(document.getElementById('ioCost').value) || 0;
-        
-        const hours = parseFloat(document.getElementById('hours').value) || 0;
+        const core = parseFloat(document.getElementById('corePrice').value) || 0;
+        const os = parseFloat(document.getElementById('osPrice').value) || 0;
+        const units = parseFloat(document.getElementById('units').value) || 0;
+        const labor = parseFloat(document.getElementById('laborHours').value) || 0;
         const rate = parseFloat(document.getElementById('rate').value) || 0;
-        const markup = (parseFloat(document.getElementById('markup').value) || 0) / 100;
 
-        // --- CUSTOMER PRICE CALCS ---
-        const totalHwSell = hwSell * qty;
-        
-        // IO Cost = Points * CostPerPoint. Sell = Cost * (1+Markup)
-        const totalIOCost = points * ioCost;
-        const totalIOSell = totalIOCost * (1 + markup);
-        
-        // Labor Sell = Hours * Rate (Assume rate includes overhead, but let's add markup for pure margin calc if needed. Usually Rate is Sell Rate)
-        // Let's assume input Rate is CHARGE OUT rate.
-        const totalLaborSell = hours * rate;
+        // Approx IO cost logic for estimate
+        const ioCost = units * 150; 
 
-        const grandTotal = totalHwSell + licenseFee + totalIOSell + totalLaborSell;
-
-        // --- INTERNAL COST / PROFIT CALCS ---
-        const totalHwCost = hwCost * qty;
-        // Assume Labor Cost is ~40% of Charge Rate (Just a rule of thumb for profit calc)
-        const totalLaborCost = hours * (rate * 0.45); 
+        document.getElementById('outCore').innerText = "$" + core.toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('outOS').innerText = "$" + os.toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('outUnitsCount').innerText = units;
+        document.getElementById('outIO').innerText = "$" + ioCost.toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('outHours').innerText = labor + " hrs";
         
-        const totalProjectCost = totalHwCost + totalIOCost + totalLaborCost; 
-        // Note: License cost is $0 internal
+        const laborTotal = labor * rate;
+        document.getElementById('outLabor').innerText = "$" + laborTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
         
-        const netProfit = grandTotal - totalProjectCost;
-        const margin = (netProfit / grandTotal) * 100;
-
-        // --- UPDATE UI ---
-        document.getElementById('txtQty').innerText = `${qty} Unit(s) @ ${fmt(hwSell)} ea`;
-        document.getElementById('outHwTotal').innerText = fmt(totalHwSell);
-        
-        document.getElementById('outLicense').innerText = fmt(licenseFee);
-        
-        document.getElementById('txtIO').innerText = `${points} Points (Sensors/Cards)`;
-        document.getElementById('outIO').innerText = fmt(totalIOSell);
-        
-        document.getElementById('txtLabor').innerText = `${hours} Hours`;
-        document.getElementById('outLabor').innerText = fmt(totalLaborSell);
-        
-        document.getElementById('grandTotal').innerText = fmt(grandTotal);
-        
-        document.getElementById('netProfit').innerText = fmt(netProfit);
-        document.getElementById('marginPercent').innerText = margin.toFixed(1) + "%";
-        
-        document.getElementById('outArr').innerText = fmt(subFee) + " /yr";
+        const total = core + os + ioCost + laborTotal;
+        document.getElementById('outTotal').innerText = "$" + total.toLocaleString(undefined, {minimumFractionDigits: 2});
     }
-
-    window.onload = calc;
+    calc();
 </script>
 
 </body>
