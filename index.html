@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAS & Controls Quote Generator</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        h2 { font-size: 1.2rem; color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-top: 0; }
+        h3 { font-size: 1rem; color: #555; margin-bottom: 10px; }
+
+        /* Input Section */
+        .input-panel {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        /* Results Section */
+        .results-panel {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .quote-block {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .quote-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .quote-row.total {
+            font-weight: bold;
+            border-top: 1px solid #ccc;
+            padding-top: 8px;
+            margin-top: 8px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .kpi-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #219150;
+        }
+        
+        button.secondary {
+            background: #95a5a6;
+            margin-left: 10px;
+        }
+
+        /* Print Styling */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { display: block; }
+            .input-panel { display: none; }
+            .results-panel { box-shadow: none; border: 1px solid #000; }
+            button { display: none; }
+            header { background: white; color: black; border-bottom: 2px solid black; }
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .results-panel { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>BAS & Controls Quote Generator</h1>
+    <p>Estimate Installation, Service, and Subscription Revenue</p>
+</header>
+
+<div class="container">
+    <div class="input-panel">
+        <h2>1. Project Scope & Hardware</h2>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Num. Controllers</label>
+                <input type="number" id="numControllers" value="10" oninput="calculateQuote()">
+                <div class="help-text">VAVs, AHUs, Plants</div>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Points per Controller</label>
+                <input type="number" id="avgPoints" value="12" oninput="calculateQuote()">
+                <div class="help-text">Avg I/O count</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Avg Hardware Cost per Point ($)</label>
+            <input type="number" id="costPerPoint" value="100" oninput="calculateQuote()">
+            <div class="help-text">Sensors, wiring, controller share</div>
+        </div>
+        <div class="form-group">
+            <label>Hardware Markup (%)</label>
+            <input type="number" id="hardwareMarkup" value="35" oninput="calculateQuote()">
+        </div>
+
+        <h2>2. Software & Licensing</h2>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Base License Cost ($)</label>
+                <input type="number" id="softwareCost" value="2500" oninput="calculateQuote()">
+                <div class="help-text">Niagara/Jace/Server</div>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Software Markup (%)</label>
+                <input type="number" id="softwareMarkup" value="50" oninput="calculateQuote()">
+            </div>
+        </div>
+
+        <h2>3. Labor (The "Brains")</h2>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Install Hours/Pt</label>
+                <input type="number" id="hoursInstall" value="2.0" step="0.1" oninput="calculateQuote()">
+                <div class="help-text">Mounting & Wiring</div>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Eng. Hours/Pt</label>
+                <input type="number" id="hoursEng" value="0.75" step="0.1" oninput="calculateQuote()">
+                <div class="help-text">Programming/Graphics</div>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Install Rate ($/hr)</label>
+                <input type="number" id="rateInstall" value="125" oninput="calculateQuote()">
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Engineer Rate ($/hr)</label>
+                <input type="number" id="rateEng" value="165" oninput="calculateQuote()">
+            </div>
+        </div>
+
+        <h2>4. Service & SaaS (Recurring)</h2>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Site Visits/Year</label>
+                <input type="number" id="visitsPerYear" value="2" oninput="calculateQuote()">
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Hrs per Visit</label>
+                <input type="number" id="hoursPerVisit" value="8" oninput="calculateQuote()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Remote Support Bank (Hrs/Yr)</label>
+            <input type="number" id="remoteHours" value="20" oninput="calculateQuote()">
+        </div>
+        <div class="form-group">
+            <label>Service Labor Rate ($/hr)</label>
+            <input type="number" id="rateService" value="145" oninput="calculateQuote()">
+        </div>
+        
+        <hr>
+        
+        <div class="form-group">
+            <label>Monthly Cloud Hosting Fee ($)</label>
+            <input type="number" id="cloudFee" value="100" oninput="calculateQuote()">
+        </div>
+        <div class="input-row">
+            <div class="form-group" style="flex:1">
+                <label>Analytics ($/sq.ft)</label>
+                <input type="number" id="analyticsRate" value="0.05" step="0.01" oninput="calculateQuote()">
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>Bldg Sq. Ft.</label>
+                <input type="number" id="sqFt" value="50000" oninput="calculateQuote()">
+            </div>
+        </div>
+    </div>
+
+    <div class="results-panel" id="printArea">
+        <h2 style="margin-bottom:20px;">Quote Summary</h2>
+
+        <div class="quote-block">
+            <h3>Step 1: Installation Project</h3>
+            <div class="quote-row">
+                <span>Total System Points:</span>
+                <span id="resTotalPoints" class="kpi-badge">0</span>
+            </div>
+            <div class="quote-row">
+                <span>Hardware Total:</span>
+                <span id="resHardware">$0.00</span>
+            </div>
+            <div class="quote-row">
+                <span>Software/Licensing:</span>
+                <span id="resSoftware">$0.00</span>
+            </div>
+            <div class="quote-row">
+                <span>Labor (Install + Eng):</span>
+                <span id="resLabor">$0.00</span>
+            </div>
+            <div class="quote-row total">
+                <span>TOTAL PROJECT:</span>
+                <span id="resGrandTotal">$0.00</span>
+            </div>
+            <div style="text-align:right; font-size:0.8rem; color:#777; margin-top:5px;">
+                Price Per Point: <span id="resPerPoint">$0.00</span>
+            </div>
+        </div>
+
+        <div class="quote-block">
+            <h3>Step 2: Service Agreement</h3>
+            <div class="quote-row">
+                <span>Physical Maintenance:</span>
+                <span id="resPhysicalService">$0.00</span>
+            </div>
+            <div class="quote-row">
+                <span>Remote Support Bank:</span>
+                <span id="resRemoteService">$0.00</span>
+            </div>
+            <div class="quote-row total">
+                <span>ANNUAL SERVICE CONTRACT:</span>
+                <span id="resServiceTotal">$0.00</span>
+            </div>
+        </div>
+
+        <div class="quote-block" style="border-left: 4px solid var(--accent-color);">
+            <h3>Step 3: SaaS / Subscriptions</h3>
+            <div class="quote-row">
+                <span>Cloud Hosting (Annual):</span>
+                <span id="resHosting">$0.00</span>
+            </div>
+            <div class="quote-row">
+                <span>Analytics Package (Annual):</span>
+                <span id="resAnalytics">$0.00</span>
+            </div>
+            <div class="quote-row total">
+                <span>TOTAL SAAS REVENUE:</span>
+                <span id="resSaaSTotal">$0.00</span>
+            </div>
+        </div>
+
+        <div class="quote-block" style="background-color: #e8f8f5; border-color: #27ae60;">
+            <div class="quote-row total" style="color: #27ae60;">
+                <span>TOTAL RECURRING REVENUE (ARR):</span>
+                <span id="resARR">$0.00</span>
+            </div>
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 5px;">(Service + SaaS)</div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="window.print()">Print / Save PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Format currency helper
+    const fmtMoney = (num) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+    };
+
+    function calculateQuote() {
+        // --- GET INPUTS ---
+        // Project
+        const numControllers = parseFloat(document.getElementById('numControllers').value) || 0;
+        const avgPoints = parseFloat(document.getElementById('avgPoints').value) || 0;
+        const costPerPoint = parseFloat(document.getElementById('costPerPoint').value) || 0;
+        const hardwareMarkup = parseFloat(document.getElementById('hardwareMarkup').value) || 0;
+        
+        // Software
+        const softwareCost = parseFloat(document.getElementById('softwareCost').value) || 0;
+        const softwareMarkup = parseFloat(document.getElementById('softwareMarkup').value) || 0;
+
+        // Labor
+        const hoursInstall = parseFloat(document.getElementById('hoursInstall').value) || 0;
+        const hoursEng = parseFloat(document.getElementById('hoursEng').value) || 0;
+        const rateInstall = parseFloat(document.getElementById('rateInstall').value) || 0;
+        const rateEng = parseFloat(document.getElementById('rateEng').value) || 0;
+
+        // Service
+        const visitsPerYear = parseFloat(document.getElementById('visitsPerYear').value) || 0;
+        const hoursPerVisit = parseFloat(document.getElementById('hoursPerVisit').value) || 0;
+        const remoteHours = parseFloat(document.getElementById('remoteHours').value) || 0;
+        const rateService = parseFloat(document.getElementById('rateService').value) || 0;
+
+        // SaaS
+        const cloudFee = parseFloat(document.getElementById('cloudFee').value) || 0;
+        const analyticsRate = parseFloat(document.getElementById('analyticsRate').value) || 0;
+        const sqFt = parseFloat(document.getElementById('sqFt').value) || 0;
+
+
+        // --- CALCULATIONS ---
+        
+        // 1. Installation
+        const totalPoints = numControllers * avgPoints;
+        
+        const totalHardwareCost = totalPoints * costPerPoint;
+        const totalHardwarePrice = totalHardwareCost * (1 + (hardwareMarkup / 100));
+
+        const totalSoftwarePrice = softwareCost * (1 + (softwareMarkup / 100));
+
+        const totalInstallLabor = (totalPoints * hoursInstall) * rateInstall;
+        const totalEngLabor = (totalPoints * hoursEng) * rateEng;
+        const totalLaborPrice = totalInstallLabor + totalEngLabor;
+
+        const grandTotalInstall = totalHardwarePrice + totalSoftwarePrice + totalLaborPrice;
+        const pricePerPoint = totalPoints > 0 ? (grandTotalInstall / totalPoints) : 0;
+
+        // 2. Service
+        const physicalServicePrice = (visitsPerYear * hoursPerVisit) * rateService;
+        const remoteServicePrice = remoteHours * rateService;
+        const totalServicePrice = physicalServicePrice + remoteServicePrice;
+
+        // 3. SaaS
+        const annualHosting = cloudFee * 12;
+        const annualAnalytics = analyticsRate * sqFt;
+        const totalSaaS = annualHosting + annualAnalytics;
+
+        const totalARR = totalServicePrice + totalSaaS;
+
+
+        // --- UPDATE UI ---
+        document.getElementById('resTotalPoints').innerText = totalPoints;
+        document.getElementById('resHardware').innerText = fmtMoney(totalHardwarePrice);
+        document.getElementById('resSoftware').innerText = fmtMoney(totalSoftwarePrice);
+        document.getElementById('resLabor').innerText = fmtMoney(totalLaborPrice);
+        document.getElementById('resGrandTotal').innerText = fmtMoney(grandTotalInstall);
+        document.getElementById('resPerPoint').innerText = fmtMoney(pricePerPoint);
+
+        document.getElementById('resPhysicalService').innerText = fmtMoney(physicalServicePrice);
+        document.getElementById('resRemoteService').innerText = fmtMoney(remoteServicePrice);
+        document.getElementById('resServiceTotal').innerText = fmtMoney(totalServicePrice);
+
+        document.getElementById('resHosting').innerText = fmtMoney(annualHosting);
+        document.getElementById('resAnalytics').innerText = fmtMoney(annualAnalytics);
+        document.getElementById('resSaaSTotal').innerText = fmtMoney(totalSaaS);
+
+        document.getElementById('resARR').innerText = fmtMoney(totalARR);
+    }
+
+    // Run on load
+    window.onload = calculateQuote;
+</script>
+
+</body>
+</html>
