@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAS & Controls Quote Generator</title>
+    <title>BAS Quote Tool & Estimating Guide</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -41,11 +41,26 @@
             border-radius: 8px;
             text-align: center;
             margin-bottom: 20px;
+            position: relative;
         }
 
         h1 { margin: 0; font-size: 1.8rem; }
         h2 { font-size: 1.2rem; color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; margin-top: 0; }
-        h3 { font-size: 1rem; color: #555; margin-bottom: 10px; }
+        h3 { font-size: 1rem; color: #555; margin-bottom: 10px; font-weight: bold; }
+
+        /* Guide Button */
+        .guide-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .guide-btn:hover { background-color: #2980b9; }
 
         /* Input Section */
         .input-panel {
@@ -55,35 +70,14 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-        }
-
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .input-row { display: flex; gap: 10px; }
         input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.95rem;
+            width: 100%; padding: 8px; border: 1px solid var(--border-color);
+            border-radius: 4px; font-size: 0.95rem; box-sizing: border-box;
         }
-
-        .help-text {
-            font-size: 0.75rem;
-            color: #777;
-            margin-top: 2px;
-        }
+        .help-text { font-size: 0.75rem; color: #777; margin-top: 2px; }
 
         /* Results Section */
         .results-panel {
@@ -104,62 +98,61 @@
             border-radius: 6px;
         }
 
-        .quote-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
+        .quote-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
         .quote-row.total {
-            font-weight: bold;
-            border-top: 1px solid #ccc;
-            padding-top: 8px;
-            margin-top: 8px;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+            font-weight: bold; border-top: 1px solid #ccc; padding-top: 8px;
+            margin-top: 8px; color: var(--primary-color); font-size: 1.1rem;
         }
-
         .kpi-badge {
-            background: var(--accent-color);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            display: inline-block;
+            background: var(--accent-color); color: white; padding: 4px 8px;
+            border-radius: 4px; font-size: 0.8rem; display: inline-block;
         }
 
-        .action-buttons {
-            margin-top: 20px;
-            text-align: center;
+        .action-buttons { margin-top: 20px; text-align: center; }
+        button.print-btn {
+            background: var(--success-color); color: white; border: none;
+            padding: 12px 24px; border-radius: 4px; cursor: pointer;
+            font-size: 1rem; font-weight: bold; transition: background 0.2s;
         }
+        button.print-btn:hover { background: #219150; }
 
-        button {
-            background: var(--success-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background 0.2s;
+        /* MODAL STYLES (The Guide) */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0,0,0,0.5);
         }
-
-        button:hover {
-            background: #219150;
+        .modal-content {
+            background-color: #fff; margin: 5% auto; padding: 0;
+            border-radius: 8px; width: 80%; max-width: 900px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
         }
+        @keyframes slideIn { from {top: -100px; opacity: 0;} to {top: 5%; opacity: 1;} }
         
-        button.secondary {
-            background: #95a5a6;
-            margin-left: 10px;
+        .modal-header {
+            padding: 20px; background: var(--primary-color); color: white;
+            border-top-left-radius: 8px; border-top-right-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .close-btn { color: white; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: var(--accent-color); }
+        
+        .modal-body { padding: 25px; overflow-y: auto; max-height: 70vh; }
+        
+        /* Guide Tables */
+        .guide-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.9rem; }
+        .guide-table th, .guide-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .guide-table th { background-color: #f2f2f2; color: var(--primary-color); }
+        .point-type { font-weight: bold; font-family: monospace; color: var(--accent-color); }
 
         /* Print Styling */
         @media print {
             body { background: white; padding: 0; }
             .container { display: block; }
             .input-panel { display: none; }
+            .guide-btn { display: none; }
+            .modal { display: none !important; }
             .results-panel { box-shadow: none; border: 1px solid #000; }
             button { display: none; }
             header { background: white; color: black; border-bottom: 2px solid black; }
@@ -168,15 +161,163 @@
         @media (max-width: 768px) {
             .container { grid-template-columns: 1fr; }
             .results-panel { position: static; }
+            .modal-content { width: 95%; margin: 10% auto; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>BAS & Controls Quote Generator</h1>
-    <p>Estimate Installation, Service, and Subscription Revenue</p>
+    <h1>BAS Quote Tool</h1>
+    <p>Estimate Points, Labor & Service Contracts</p>
+    <button class="guide-btn" onclick="openModal()">📖 Open Estimating Guide</button>
 </header>
+
+<div id="guideModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="color:white; border:none; margin:0;">BAS Estimating Cheat Sheet</h2>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h3>1. The Golden Rule: One Wire = One Point</h3>
+            <p>Do not estimate based on "functions" (e.g. "Heating"). Estimate based on <strong>wires</strong> connected to the controller.</p>
+            
+            <h3>2. Example: Standard Rooftop Unit (RTU)</h3>
+            <p><em>Use this to estimate points for a typical commercial packaged unit.</em></p>
+            <table class="guide-table">
+                <thead>
+                    <tr>
+                        <th>Device / Function</th>
+                        <th>Point Type</th>
+                        <th>Point Count</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Fan Start/Stop</td>
+                        <td class="point-type">DO</td>
+                        <td>1</td>
+                        <td>Relay command to start fan</td>
+                    </tr>
+                    <tr>
+                        <td>Fan Status</td>
+                        <td class="point-type">DI</td>
+                        <td>1</td>
+                        <td>Current switch (proof of flow)</td>
+                    </tr>
+                    <tr>
+                        <td>Cooling Stage 1</td>
+                        <td class="point-type">DO</td>
+                        <td>1</td>
+                        <td>Compressor 1</td>
+                    </tr>
+                    <tr>
+                        <td>Cooling Stage 2</td>
+                        <td class="point-type">DO</td>
+                        <td>1</td>
+                        <td>Compressor 2</td>
+                    </tr>
+                    <tr>
+                        <td>Heating Stage 1</td>
+                        <td class="point-type">DO</td>
+                        <td>1</td>
+                        <td>Gas valve / Strip heat 1</td>
+                    </tr>
+                    <tr>
+                        <td>Heating Stage 2</td>
+                        <td class="point-type">DO</td>
+                        <td>1</td>
+                        <td>Gas valve / Strip heat 2</td>
+                    </tr>
+                    <tr>
+                        <td>Economizer Damper</td>
+                        <td class="point-type">AO</td>
+                        <td>1</td>
+                        <td>0-10V Signal to open/close</td>
+                    </tr>
+                    <tr>
+                        <td>Supply Air Temp</td>
+                        <td class="point-type">AI</td>
+                        <td>1</td>
+                        <td>Duct Sensor</td>
+                    </tr>
+                    <tr>
+                        <td>Return Air Temp</td>
+                        <td class="point-type">AI</td>
+                        <td>1</td>
+                        <td>Duct Sensor</td>
+                    </tr>
+                    <tr>
+                        <td>Zone Temp (T-Stat)</td>
+                        <td class="point-type">AI</td>
+                        <td>1</td>
+                        <td>Wall Sensor</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td></td>
+                        <td><strong>10 Points</strong></td>
+                        <td><strong>Enter "10" in the calculator</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>3. Example: VAV Box (Variable Air Volume)</h3>
+            <table class="guide-table">
+                <thead>
+                    <tr>
+                        <th>Device / Function</th>
+                        <th>Point Type</th>
+                        <th>Count</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Damper Actuator</td>
+                        <td class="point-type">AO</td>
+                        <td>1</td>
+                        <td>Opens/closes air flow</td>
+                    </tr>
+                    <tr>
+                        <td>Zone Temp</td>
+                        <td class="point-type">AI</td>
+                        <td>1</td>
+                        <td>Wall Sensor</td>
+                    </tr>
+                    <tr>
+                        <td>Discharge Air Temp</td>
+                        <td class="point-type">AI</td>
+                        <td>1</td>
+                        <td>Strip heat check</td>
+                    </tr>
+                    <tr>
+                        <td>Reheat Valve (or Stage 1)</td>
+                        <td class="point-type">AO / DO</td>
+                        <td>1</td>
+                        <td>Hot water or Electric</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td></td>
+                        <td><strong>4 Points</strong></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>4. Point Types Legend</h3>
+            <ul>
+                <li><strong>DI (Digital Input):</strong> Watching a switch (On/Off). <em>Ex: Filter Alarm, Fan Status.</em></li>
+                <li><strong>DO (Digital Output):</strong> Turning a relay on (On/Off). <em>Ex: Fan Start, Heat Stage 1.</em></li>
+                <li><strong>AI (Analog Input):</strong> Reading a changing value. <em>Ex: Temperature, Humidity, Pressure.</em></li>
+                <li><strong>AO (Analog Output):</strong> Sending a variable signal (0-100%). <em>Ex: Damper position, Speed drive.</em></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="input-panel">
@@ -188,9 +329,9 @@
                 <div class="help-text">VAVs, AHUs, Plants</div>
             </div>
             <div class="form-group" style="flex:1">
-                <label>Points per Controller</label>
-                <input type="number" id="avgPoints" value="12" oninput="calculateQuote()">
-                <div class="help-text">Avg I/O count</div>
+                <label>Avg Points per Controller</label>
+                <input type="number" id="avgPoints" value="10" oninput="calculateQuote()">
+                <div class="help-text">See Guide for counts ↗</div>
             </div>
         </div>
 
@@ -350,7 +491,7 @@
         </div>
 
         <div class="action-buttons">
-            <button onclick="window.print()">Print / Save PDF</button>
+            <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
         </div>
     </div>
 </div>
@@ -363,37 +504,29 @@
 
     function calculateQuote() {
         // --- GET INPUTS ---
-        // Project
         const numControllers = parseFloat(document.getElementById('numControllers').value) || 0;
         const avgPoints = parseFloat(document.getElementById('avgPoints').value) || 0;
         const costPerPoint = parseFloat(document.getElementById('costPerPoint').value) || 0;
         const hardwareMarkup = parseFloat(document.getElementById('hardwareMarkup').value) || 0;
         
-        // Software
         const softwareCost = parseFloat(document.getElementById('softwareCost').value) || 0;
         const softwareMarkup = parseFloat(document.getElementById('softwareMarkup').value) || 0;
 
-        // Labor
         const hoursInstall = parseFloat(document.getElementById('hoursInstall').value) || 0;
         const hoursEng = parseFloat(document.getElementById('hoursEng').value) || 0;
         const rateInstall = parseFloat(document.getElementById('rateInstall').value) || 0;
         const rateEng = parseFloat(document.getElementById('rateEng').value) || 0;
 
-        // Service
         const visitsPerYear = parseFloat(document.getElementById('visitsPerYear').value) || 0;
         const hoursPerVisit = parseFloat(document.getElementById('hoursPerVisit').value) || 0;
         const remoteHours = parseFloat(document.getElementById('remoteHours').value) || 0;
         const rateService = parseFloat(document.getElementById('rateService').value) || 0;
 
-        // SaaS
         const cloudFee = parseFloat(document.getElementById('cloudFee').value) || 0;
         const analyticsRate = parseFloat(document.getElementById('analyticsRate').value) || 0;
         const sqFt = parseFloat(document.getElementById('sqFt').value) || 0;
 
-
         // --- CALCULATIONS ---
-        
-        // 1. Installation
         const totalPoints = numControllers * avgPoints;
         
         const totalHardwareCost = totalPoints * costPerPoint;
@@ -408,18 +541,15 @@
         const grandTotalInstall = totalHardwarePrice + totalSoftwarePrice + totalLaborPrice;
         const pricePerPoint = totalPoints > 0 ? (grandTotalInstall / totalPoints) : 0;
 
-        // 2. Service
         const physicalServicePrice = (visitsPerYear * hoursPerVisit) * rateService;
         const remoteServicePrice = remoteHours * rateService;
         const totalServicePrice = physicalServicePrice + remoteServicePrice;
 
-        // 3. SaaS
         const annualHosting = cloudFee * 12;
         const annualAnalytics = analyticsRate * sqFt;
         const totalSaaS = annualHosting + annualAnalytics;
 
         const totalARR = totalServicePrice + totalSaaS;
-
 
         // --- UPDATE UI ---
         document.getElementById('resTotalPoints').innerText = totalPoints;
@@ -438,6 +568,18 @@
         document.getElementById('resSaaSTotal').innerText = fmtMoney(totalSaaS);
 
         document.getElementById('resARR').innerText = fmtMoney(totalARR);
+    }
+
+    // Modal Logic
+    var modal = document.getElementById("guideModal");
+    function openModal() { modal.style.display = "block"; }
+    function closeModal() { modal.style.display = "none"; }
+    
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 
     // Run on load
