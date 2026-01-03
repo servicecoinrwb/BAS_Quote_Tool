@@ -76,6 +76,27 @@
         .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
         .checkbox-item input { width: auto; margin: 0; }
 
+        /* Unified Navigation Styles */
+        .nav-container { max-width: 1400px; margin: 0 auto 20px auto; }
+        .nav-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+        }
+        .brand-group { display: flex; align-items: center; gap: 15px; }
+        .brand-icon {
+            background: var(--primary); color: var(--accent); width: 40px; height: 40px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .brand-text h1 { font-size: 1.1rem; margin: 0; color: var(--primary); line-height: 1.2; font-weight: bold; }
+        .brand-text div { font-size: 0.75rem; color: #64748b; font-weight: 500; }
+        .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-btn {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: white;
+            border: 1px solid #cbd5e1; border-radius: 6px; color: #475569; font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #f8fafc; color: var(--primary); border-color: #94a3b8; }
+
         /* Modal Styles */
         .modal {
             display: none; 
@@ -134,22 +155,22 @@
 </head>
 <body>
 
-    <!-- Top Navigation -->
-    <div class="card no-print">
-        <div class="card-body" style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="background: var(--primary); color: var(--accent); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+    <!-- Unified Navigation Header -->
+    <div class="nav-container no-print">
+        <div class="nav-card">
+            <div class="brand-group">
+                <div class="brand-icon">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
-                <div>
-                    <h1 style="font-size: 1.2rem;">Service Manager</h1>
-                    <div style="font-size: 0.8rem; color: #64748b;">CYPHER Building Intelligence</div>
+                <div class="brand-text">
+                    <h1>Service Manager</h1>
+                    <div>Mechanical Temp Operations</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <a href="quote_tool.html" class="btn btn-outline"><i class="fa-solid fa-file-invoice-dollar"></i> Quote Tool</a>
-                <a href="bas_hml_guide.html" class="btn btn-outline"><i class="fa-solid fa-book"></i> Strategy</a>
-                <a href="panel_guide.html" class="btn btn-outline"><i class="fa-solid fa-microchip"></i> Panel Standards</a>
+            <div class="nav-links">
+                <a href="quote_tool.html" class="nav-btn"><i class="fa-solid fa-file-invoice-dollar"></i> Quote Tool</a>
+                <a href="bas_hml_guide.html" class="nav-btn"><i class="fa-solid fa-book"></i> Strategy</a>
+                <a href="panel_guide.html" class="nav-btn"><i class="fa-solid fa-microchip"></i> Panel Standards</a>
             </div>
         </div>
     </div>
@@ -251,7 +272,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW: Sensor Reference -->
+                    <!-- Sensor Reference -->
                     <div class="kb-item" style="border-color: #ef4444;">
                         <div class="kb-title"><i class="fa-solid fa-temperature-half text-cyan-600"></i> Sensor Reference (77°F)</div>
                         <div style="font-size: 0.8rem; margin-top: 5px;">
