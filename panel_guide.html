@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Build Standards | CYPHER Building Intelligence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a; /* Cypher Dark */
+            --accent: #0ea5e9; /* Cyber Blue */
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --bg: #f8fafc;
+            --panel-grey: #e2e8f0;
+        }
+        
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; }
+        
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* Card Styles */
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .card-header { background: var(--primary); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .card-body { padding: 20px; }
+        
+        /* Typography */
+        h1 { margin: 0; font-size: 1.5rem; }
+        h2 { font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0; margin-bottom: 15px; }
+        h3 { font-size: 0.95rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        
+        /* Navigation */
+        .nav-bar { background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-outline { text-decoration: none; color: #64748b; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-outline:hover { background: #f1f5f9; color: var(--primary); }
+
+        /* Panel Visualizer */
+        .panel-layout { background: var(--panel-grey); border: 4px solid #94a3b8; border-radius: 4px; padding: 20px; position: relative; height: 500px; display: flex; flex-direction: column; gap: 15px; }
+        .wire-duct { background: #cbd5e1; height: 30px; width: 100%; border: 1px dashed #64748b; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; }
+        .din-rail { height: 100px; border-top: 2px solid #64748b; border-bottom: 2px solid #64748b; margin: 0 20px; display: flex; align-items: center; gap: 5px; padding: 0 10px; background: rgba(0,0,0,0.02); }
+        
+        /* Components */
+        .comp { height: 80px; background: white; border: 1px solid #333; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        .comp-psu { width: 60px; background: #e0f2fe; border-color: var(--accent); }
+        .comp-cypher { width: 120px; background: var(--primary); color: white; border-color: black; }
+        .comp-io { width: 100px; background: #334155; color: white; }
+        .comp-relay { width: 30px; background: #fffbeb; border-color: #f59e0b; }
+        .comp-term { width: 100%; height: 40px; background: #f1f5f9; border: 1px dashed #94a3b8; margin-top: auto; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 0.8rem; }
+
+        /* Rules List */
+        .rule-list { list-style: none; padding: 0; margin: 0; }
+        .rule-list li { margin-bottom: 12px; padding-left: 24px; position: relative; }
+        .rule-list li::before { font-family: "Font Awesome 6 Free"; position: absolute; left: 0; top: 2px; }
+        .rule-good::before { content: "\f00c"; font-weight: 900; color: var(--success); }
+        .rule-bad::before { content: "\f00d"; font-weight: 900; color: var(--danger); }
+        
+        /* Wiring Table */
+        .wire-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .wire-table th { text-align: left; background: #f1f5f9; padding: 8px; border-bottom: 2px solid #e2e8f0; }
+        .wire-table td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+        .color-swatch { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; border: 1px solid #ccc; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header / Nav -->
+        <div class="nav-bar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: var(--primary); color: var(--accent); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                    <h1 style="font-size: 1.2rem; color: var(--primary); font-weight: bold;">Panel Build Standards</h1>
+                    <div style="font-size: 0.8rem; color: #64748b;">Mechanical Temp Fabrication Dept.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="service_dashboard.html" class="btn-outline"><i class="fa-solid fa-arrow-left"></i> Service Dashboard</a>
+                <a href="bas_hml_guide.html" class="btn-outline"><i class="fa-solid fa-book"></i> Strategy</a>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            
+            <!-- LEFT COLUMN: The Standards -->
+            <div>
+                <!-- Golden Rules -->
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fa-solid fa-shield-halved"></i> The Golden Rules</span>
+                    </div>
+                    <div class="card-body">
+                        <h3><i class="fa-solid fa-bolt"></i> Voltage Separation</h3>
+                        <ul class="rule-list">
+                            <li class="rule-good"><strong>Strict Separation:</strong> High Voltage (120V+) and Low Voltage (24V/Comms) must never share the same wire duct.</li>
+                            <li class="rule-good"><strong>Crossing:</strong> If they must cross, they connect at a 90-degree angle.</li>
+                            <li class="rule-bad"><strong>Never:</strong> Run 120V power for a receptacle in the same panduit as RS-485 comms.</li>
+                        </ul>
+
+                        <h3 style="margin-top: 20px;"><i class="fa-solid fa-check-double"></i> Craftsmanship</h3>
+                        <ul class="rule-list">
+                            <li class="rule-good"><strong>Ferrules:</strong> All stranded wire terminations (24V and Comms) must use ferrules. No stray copper strands.</li>
+                            <li class="rule-good"><strong>Labeling:</strong> Every wire is labeled at BOTH ends within 2 inches of termination.</li>
+                            <li class="rule-good"><strong>Spare Fuse:</strong> Every panel must contain (1) spare fuse taped to the inside door or in a holder.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Wiring Color Code -->
+                <div class="card">
+                    <div class="card-header" style="background: #334155;">
+                        <span><i class="fa-solid fa-palette"></i> Wiring Color Standards</span>
+                    </div>
+                    <div class="card-body">
+                        <table class="wire-table">
+                            <thead>
+                                <tr>
+                                    <th>Function</th>
+                                    <th>Wire Color</th>
+                                    <th>Gauge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>24VAC Hot</td>
+                                    <td><span class="color-swatch" style="background: red;"></span>Red</td>
+                                    <td>18 AWG</td>
+                                </tr>
+                                <tr>
+                                    <td>24VAC Common</td>
+                                    <td><span class="color-swatch" style="background: black;"></span>Black</td>
+                                    <td>18 AWG</td>
+                                </tr>
+                                <tr>
+                                    <td>Input Signal (UI)</td>
+                                    <td><span class="color-swatch" style="background: white;"></span>White</td>
+                                    <td>18/22 AWG</td>
+                                </tr>
+                                <tr>
+                                    <td>Input Common</td>
+                                    <td><span class="color-swatch" style="background: black;"></span>Black</td>
+                                    <td>18/22 AWG</td>
+                                </tr>
+                                <tr>
+                                    <td>Output Signal (AO)</td>
+                                    <td><span class="color-swatch" style="background: blue;"></span>Blue</td>
+                                    <td>18 AWG</td>
+                                </tr>
+                                <tr>
+                                    <td>Comms (RS-485)</td>
+                                    <td><span class="color-swatch" style="background: purple;"></span>Purple/Gray</td>
+                                    <td>22 AWG Shielded</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Cypher Specifics -->
+                <div class="card">
+                    <div class="card-header" style="background: var(--accent); color: white;">
+                        <span><i class="fa-solid fa-server"></i> Cypher Hardware Setup</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Edge-X1 Installation</h3>
+                        <p style="font-size: 0.9rem; color: #475569;">
+                            The Edge-X1 is the brain. It must be powered by a <strong>dedicated</strong> Class 2 transformer. Do not share this transformer with field actuators (valves/dampers).
+                        </p>
+                        <ul class="rule-list" style="font-size: 0.9rem; color: #333;">
+                            <li class="rule-good"><strong>Power:</strong> 24VAC or 24VDC.</li>
+                            <li class="rule-good"><strong>Grounding:</strong> Connect the 'G' terminal to earth ground.</li>
+                            <li class="rule-good"><strong>Network:</strong> Use Port 1 (ETH0) for primary uplink.</li>
+                        </ul>
+
+                        <h3 style="margin-top: 15px;">IO-88 Expansion</h3>
+                        <p style="font-size: 0.9rem; color: #475569;">
+                            Modules slide together on the DIN rail. If spacing is required, use a standard patch cable between the RS-485 ports.
+                        </p>
+                        <div style="background: #fff7ed; padding: 10px; border-left: 3px solid #f59e0b; font-size: 0.85rem;">
+                            <strong>Termination Switch:</strong> Only the <strong>LAST</strong> device in the RS-485 chain should have the EOL (End of Line) switch set to ON.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Visualizer -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fa-solid fa-layer-group"></i> Standard Panel Layout (24x24)</span>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="panel-layout">
+                            <!-- Top Wire Duct -->
+                            <div class="wire-duct">Wire Duct (High Voltage / Line In)</div>
+                            
+                            <!-- Row 1: Power -->
+                            <div class="din-rail">
+                                <div class="comp comp-psu">120v<br>Breaker</div>
+                                <div class="comp comp-psu">24VAC<br>XFMR</div>
+                                <div class="comp comp-psu">24VAC<br>XFMR</div>
+                                <div style="font-size: 0.7rem; color: #64748b; margin-left: auto;">Row 1: Power Distribution</div>
+                            </div>
+                            
+                            <div class="wire-duct">Wire Duct (Separation)</div>
+
+                            <!-- Row 2: Cypher Brains -->
+                            <div class="din-rail">
+                                <div class="comp comp-cypher">
+                                    <i class="fa-solid fa-microchip"></i><br>
+                                    CYPHER<br>EDGE-X1
+                                </div>
+                                <div class="comp comp-io">
+                                    IO-88<br>(Mod 1)
+                                </div>
+                                <div class="comp comp-io">
+                                    IO-88<br>(Mod 2)
+                                </div>
+                                <div style="font-size: 0.7rem; color: #64748b; margin-left: auto;">Row 2: Logic & IO</div>
+                            </div>
+
+                            <div class="wire-duct">Wire Duct (Low Voltage)</div>
+
+                            <!-- Row 3: Relays -->
+                            <div class="din-rail">
+                                <div class="comp comp-relay">R1</div>
+                                <div class="comp comp-relay">R2</div>
+                                <div class="comp comp-relay">R3</div>
+                                <div class="comp comp-relay">R4</div>
+                                <div style="font-size: 0.7rem; color: #64748b; margin-left: auto;">Row 3: Isolation Relays</div>
+                            </div>
+
+                            <div class="wire-duct">Wire Duct (Field Exit)</div>
+
+                            <!-- Bottom: Terminals -->
+                            <div class="comp-term">
+                                Field Termination Strip (TB-1 to TB-50)
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <h3><i class="fa-solid fa-clipboard-check"></i> Pre-Ship Checklist</h3>
+                            <div class="checkbox-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                                <label><input type="checkbox"> Torque all terminals</label>
+                                <label><input type="checkbox"> Tug test on ferrules</label>
+                                <label><input type="checkbox"> Voltage Check (24V +/- 10%)</label>
+                                <label><input type="checkbox"> Apply "Cypher Inside" Sticker</label>
+                                <label><input type="checkbox"> Clean Fingerprints / Debris</label>
+                                <label><input type="checkbox"> Insert Drawings in Pocket</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
