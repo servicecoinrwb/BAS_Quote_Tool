@@ -69,6 +69,48 @@
         .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
         .checkbox-item input { width: auto; margin: 0; }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
+        .step-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .step-title { font-weight: bold; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .code-block { background: #1e293b; color: #22c55e; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; margin-top: 8px; }
         
         /* Print Styles */
         @media print {
@@ -196,6 +238,10 @@
                         <div class="kb-title">Siemens / Metasys <span class="tag tag-thick">THICK</span></div>
                         <div class="kb-detail">Requires proprietary software installed on laptop + USB key/dongle.</div>
                     </div>
+                    
+                    <button onclick="openGuide()" class="btn btn-outline" style="width: 100%; margin-top: 15px; justify-content: center;">
+                        <i class="fa-solid fa-laptop-medical"></i> Open Connection Guide
+                    </button>
                 </div>
             </div>
 
@@ -299,6 +345,59 @@
 
     </div>
 
+    <!-- CONNECTION GUIDE MODAL -->
+    <div id="guideModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span><i class="fa-solid fa-ethernet"></i> Laptop Connection Guide</span>
+                <span onclick="closeGuide()" style="cursor: pointer;"><i class="fa-solid fa-times"></i></span>
+            </div>
+            <div class="modal-body">
+                
+                <div class="step-box">
+                    <div class="step-title"><i class="fa-solid fa-1"></i> Physical Connection</div>
+                    <p style="font-size: 0.9rem; color: #333;">
+                        Connect your laptop via Ethernet cable to the controller's secondary port or the local unmanaged switch in the panel. 
+                        <strong>Do not</strong> unplug the primary network uplink without verifying site redundancy.
+                    </p>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-title"><i class="fa-solid fa-2"></i> Laptop IP Configuration</div>
+                    <p style="font-size: 0.9rem; color: #333;">
+                        Most BAS networks use Static IPs. Do not use DHCP unless confirmed.
+                        <br><strong>Windows:</strong> <code>Control Panel > Network > Adapter Settings > IPv4</code>
+                    </p>
+                    <div style="font-size: 0.85rem; background: #e2e8f0; padding: 8px; margin-top: 5px; border-radius: 4px;">
+                        <strong>Example:</strong><br>
+                        Controller IP: 192.168.1.140<br>
+                        Set Laptop IP: <strong>192.168.1.200</strong><br>
+                        Subnet Mask: 255.255.255.0
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-title"><i class="fa-solid fa-3"></i> Verify & Find Ports</div>
+                    <p style="font-size: 0.9rem; color: #333;">
+                        Open PowerShell to verify connectivity and scan for open ports if the web interface is not loading.
+                    </p>
+                    <div class="code-block">
+                        # 1. Ping the controller<br>
+                        ping 192.168.1.140<br><br>
+                        # 2. Check for BACnet (47808)<br>
+                        Test-NetConnection 192.168.1.140 -Port 47808<br><br>
+                        # 3. Check for Niagara/Fox (1911)<br>
+                        Test-NetConnection 192.168.1.140 -Port 1911
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <button onclick="closeGuide()" class="btn btn-outline">Close Guide</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Set Date
         document.getElementById('ticketDate').innerText = new Date().toLocaleDateString();
@@ -322,6 +421,22 @@
             document.getElementById('dispTruck').innerText = "$" + truck.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('dispMat').innerText = "$" + matTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('dispTotal').innerText = "$" + grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        // Modal Logic
+        function openGuide() {
+            document.getElementById('guideModal').style.display = "flex";
+        }
+        function closeGuide() {
+            document.getElementById('guideModal').style.display = "none";
+        }
+        
+        // Close on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('guideModal');
+            if (event.target == modal) {
+                closeGuide();
+            }
         }
 
         // Init calc
