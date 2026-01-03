@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mechanical Temp /  CYPHER Building Intelligence | Service Strategy</title>
+    <title>Mechanical Temp | Service Strategy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -30,15 +30,12 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-slate-900 leading-tight">Service Strategy</h1>
-                    <div class="text-xs text-slate-500 font-medium">Mechanical Temp /  CYPHER Building Intelligence</div>
+                    <div class="text-xs text-slate-500 font-medium">Mechanical Temp Operations</div>
                 </div>
             </div>
             <div class="flex flex-wrap justify-center gap-3">
                 <a href="index.html" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors">
                     <i class="fa-solid fa-screwdriver-wrench"></i> Service Dashboard
-                </a>
-                <a href="tech_ops_tool.html" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors">
-                    <i class="fa-solid fa-screwdriver-wrench"></i> Commissioning
                 </a>
                 <a href="quote_tool.html" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors">
                     <i class="fa-solid fa-file-invoice-dollar"></i> Quote Tool
@@ -248,6 +245,71 @@
                                     <strong class="text-slate-800 block">Material Markup</strong>
                                     40% on generic parts (relays, wire).<br>
                                     <span class="text-cyan-600 font-bold">MSRP on Cypher Hardware.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW SECTION: THE JACE SWAP -->
+        <section class="my-12">
+             <div class="flex items-center gap-2 mb-6">
+                <i class="fa-solid fa-arrows-rotate text-slate-800 text-xl"></i>
+                <h3 class="text-2xl font-bold text-slate-900">Technical Strategy: The JACE Swap</h3>
+            </div>
+            <div class="bg-slate-800 text-white rounded-xl shadow-md overflow-hidden border border-slate-700 p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-xl font-bold text-cyan-400 mb-4">Phase 1: Physical Migration</h4>
+                        <ul class="space-y-4 text-slate-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-cyan-400"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <div>
+                                    <strong class="text-white block">1. The Audit</strong>
+                                    Identify the "Trunk" wires connected to the JACE RS-485 ports. Note the protocol (usually BACnet MS/TP or N2) and baud rate (38400 or 76800).
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-red-400"><i class="fa-solid fa-power-off"></i></div>
+                                <div>
+                                    <strong class="text-white block">2. Demolition</strong>
+                                    Power down the JACE. Unplug the green MSTP connectors. Remove the JACE from the DIN rail. 
+                                    <em class="text-slate-500 block mt-1">Note: We leave the field controllers (VAVs, Boilers) untouched. We are only replacing the "Brain".</em>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-green-400"><i class="fa-solid fa-plug"></i></div>
+                                <div>
+                                    <strong class="text-white block">3. Connection</strong>
+                                    Mount the <strong>Cypher Edge-X1</strong>. Land the existing RS-485 trunk wires onto Cypher Port 1 & 2. Power up with 24VAC.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="border-l border-slate-600 pl-8">
+                         <h4 class="text-xl font-bold text-cyan-400 mb-4">Phase 2: Digital Takeover</h4>
+                         <ul class="space-y-4 text-slate-300 text-sm">
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-yellow-400"><i class="fa-solid fa-radar"></i></div>
+                                <div>
+                                    <strong class="text-white block">4. Discovery Scan</strong>
+                                    Log into Cypher OS. Set Port 1 to BACnet MS/TP. Run "Discover". The system will ping every device on the wire and populate the database automatically.
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-purple-400"><i class="fa-solid fa-code-branch"></i></div>
+                                <div>
+                                    <strong class="text-white block">5. Point Mapping</strong>
+                                    Since field devices are standard BACnet, Cypher pulls in their points (Room Temp, Setpoint) instantly. No new programming required at the VAV level.
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-slate-700 p-2 rounded text-blue-400"><i class="fa-solid fa-tablet-screen-button"></i></div>
+                                <div>
+                                    <strong class="text-white block">6. Graphics Upgrade</strong>
+                                    The old JACE graphics (Java) are gone. We build modern HTML5 dashboards in Cypher that point to the newly discovered data tags.
                                 </div>
                             </li>
                         </ul>
