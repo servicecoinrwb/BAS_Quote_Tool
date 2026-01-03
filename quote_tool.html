@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cypher Controls Estimate</title>
+    <title>Quote Tool | Mechanical Temp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #0f172a; /* Cypher Dark Blue/Black */
             --accent: #0ea5e9; /* Cyber Blue */
-            --bg: #f8fafc;
+            --bg: #f1f5f9; /* Matching Dashboard BG */
+            --card-bg: #ffffff;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #333; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; }
         
-        /* Header Branding */
-        .header { display: flex; justify-content: space-between; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
-        .brand h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; color: var(--primary); text-transform: uppercase; }
-        .brand span { color: var(--accent); }
-        .sub-brand { font-size: 0.9rem; color: #64748b; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+        /* Navigation Card (Matches Dashboard) */
+        .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+        .card-body { padding: 15px 20px; }
+        
+        /* Main Document Container (The "Paper") */
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 4px; }
+        
+        /* Header Branding (Matches Service Ticket) */
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        .brand h1 { margin: 0; font-size: 1.8rem; letter-spacing: -1px; color: var(--primary); text-transform: uppercase; font-weight: 800; }
+        .sub-brand { font-size: 0.9rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .contact-info { font-size: 0.8rem; color: #64748b; margin-top: 5px; }
         
         /* Inputs (Hidden on Print) */
-        .controls { background: #f1f5f9; padding: 20px; margin-bottom: 30px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .controls { background: #f8fafc; padding: 20px; margin-bottom: 30px; border-radius: 8px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .input-group label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: #64748b; }
-        .input-group input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .input-group input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; }
         .section-title { grid-column: span 3; font-weight: bold; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 10px; }
 
         /* Buttons */
-        .btn { padding: 10px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; border-radius: 4px; display: inline-block; border: none; font-size: 0.9rem; }
-        .btn-print { background: var(--accent); color: white; width: 100%; }
+        .btn { padding: 8px 15px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; border: none; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-print { background: var(--accent); color: white; width: 100%; justify-content: center; }
         .btn-print:hover { background: #0284c7; }
-        .btn-link { background: #e2e8f0; color: #475569; width: 100%; }
-        .btn-link:hover { background: #cbd5e1; }
+        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
+        .btn-outline:hover { background: #f1f5f9; color: #333; }
 
         /* Quote Table */
         table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
@@ -43,137 +50,158 @@
         
         @media print {
             body { background: white; padding: 0; }
-            .container { box-shadow: none; padding: 0; }
-            .controls, .no-print { display: none !important; }
+            .container { box-shadow: none; padding: 0; margin: 0; max-width: 100%; }
+            .controls, .no-print, .card { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="brand">
-            <h1>Cypher<span>.</span></h1>
-            <div class="sub-brand">Intelligent Building Automation</div>
-        </div>
-        <div style="text-align: right;">
-            <div><strong>Estimate #1043</strong></div>
-            <div>Date: <span id="dateDisplay"></span></div>
-        </div>
-    </div>
-
-    <div class="controls">
-        <div class="section-title">Hardware</div>
-        <div class="input-group">
-            <label>Cypher Core ($)</label>
-            <input type="number" id="corePrice" value="1200" oninput="calc()">
-        </div>
-        <div class="input-group">
-            <label>OS License ($)</label>
-            <input type="number" id="osPrice" value="1500" oninput="calc()">
-        </div>
-        <div class="input-group">
-            <label>Units/Zones</label>
-            <input type="number" id="units" value="5" oninput="calc()">
-        </div>
-
-        <div class="section-title">Tech Labor (The "Brains")</div>
-        <div class="input-group">
-            <label>Programming Hours</label>
-            <input type="number" id="techHours" value="20" oninput="calc()">
-        </div>
-        <div class="input-group">
-            <label>Tech Rate ($/hr)</label>
-            <input type="number" id="techRate" value="165" oninput="calc()">
-        </div>
-        <div class="input-group"></div> <!-- Spacer -->
-
-        <div class="section-title">Install Labor (The "Muscle")</div>
-        <div class="input-group">
-            <label>Electrician Hours</label>
-            <input type="number" id="installHours" value="40" oninput="calc()">
-        </div>
-        <div class="input-group">
-            <label>Install Rate ($/hr)</label>
-            <input type="number" id="installRate" value="110" oninput="calc()">
-        </div>
-        <div class="input-group">
-            <label>Misc Material ($)</label>
-            <input type="number" id="miscMat" value="500" oninput="calc()">
-        </div>
-        
-        <!-- Action Buttons -->
-        <div style="grid-column: span 3; display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 10px;">
-            <button onclick="window.print()" class="btn btn-print"><i class="fa-solid fa-print"></i> PRINT PROPOSAL</button>
-            <a href="bas_hml_guide.html" class="btn btn-link"><i class="fa-solid fa-arrow-left"></i> STRATEGY GUIDE</a>
+    <!-- Top Navigation (Matches Service Dashboard) -->
+    <div class="card no-print">
+        <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: var(--primary); color: var(--accent); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <h1 style="font-size: 1.2rem; color: var(--primary); font-weight: bold; margin: 0;">Quote Tool</h1>
+                    <div style="font-size: 0.8rem; color: #64748b;">Mechanical Temp Operations</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="service_dashboard.html" class="btn btn-outline"><i class="fa-solid fa-screwdriver-wrench"></i> Service Dashboard</a>
+                <a href="bas_hml_guide.html" class="btn btn-outline"><i class="fa-solid fa-book"></i> Strategy</a>
+                <a href="panel_guide.html" class="btn btn-outline"><i class="fa-solid fa-microchip"></i> Panel Standards</a>
+            </div>
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th style="width: 100px; text-align: center;">Qty</th>
-                <th style="text-align: right;">Line Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <strong>Cypher Core X1 Controller</strong><br>
-                    <small>Primary logic controller, web server, and database host.</small>
-                </td>
-                <td style="text-align: center;">1</td>
-                <td style="text-align: right;" id="outCore">$1,200.00</td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Cypher OS Site License</strong><br>
-                    <small>Unlimited points license, user interface, and local history database.</small>
-                </td>
-                <td style="text-align: center;">1</td>
-                <td style="text-align: right;" id="outOS">$1,500.00</td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Cypher I/O Expansion & Sensors</strong><br>
-                    <small>Interface cards and sensors for <span id="outUnitsCount">5</span> zones.</small>
-                </td>
-                <td style="text-align: center;">1</td>
-                <td style="text-align: right;" id="outIO">$500.00</td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Electrical Installation (Field Wiring)</strong><br>
-                    <small>Running conduit, pulling communication wire, mounting sensors, and termination.</small>
-                </td>
-                <td style="text-align: center;" id="outInstallHours">40 hrs</td>
-                <td style="text-align: right;" id="outInstallTotal">$4,900.00</td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Professional Services</strong><br>
-                    <small>Engineering, programming, graphics, start-up, and commissioning.</small>
-                </td>
-                <td style="text-align: center;" id="outTechHours">20 hrs</td>
-                <td style="text-align: right;" id="outTechTotal">$3,300.00</td>
-            </tr>
-            <tr class="total-row">
-                <td colspan="2" style="text-align: right;">PROJECT TOTAL</td>
-                <td style="text-align: right;" id="outTotal">$11,400.00</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Main Quote Document -->
+    <div class="container">
+        <div class="header">
+            <div class="brand">
+                <h1>Mechanical Temp</h1>
+                <div class="sub-brand">Cypher Intelligent Building Solutions</div>
+                <div class="contact-info">24/7 Service: (313) 282-4758</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 1.1rem; color: #333;"><strong>Estimate #1043</strong></div>
+                <div style="color: #64748b;">Date: <span id="dateDisplay"></span></div>
+            </div>
+        </div>
 
-    <div style="background: #f8fafc; padding: 20px; border-left: 4px solid var(--accent);">
-        <strong>Annual Software Maintenance (SMA):</strong> Includes remote tunneling, security patches, and database optimization.
-        <div style="float: right; font-weight: bold;">$600.00 / yr</div>
-    </div>
+        <div class="controls">
+            <div class="section-title">Hardware Inputs</div>
+            <div class="input-group">
+                <label>Cypher Core ($)</label>
+                <input type="number" id="corePrice" value="1200" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>OS License ($)</label>
+                <input type="number" id="osPrice" value="1500" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>Units/Zones</label>
+                <input type="number" id="units" value="5" oninput="calc()">
+            </div>
 
-    <div class="footer">
-        Valid for 30 days. Proprietary technology of Cypher Automation.
+            <div class="section-title">Tech Labor (The "Brains")</div>
+            <div class="input-group">
+                <label>Programming Hours</label>
+                <input type="number" id="techHours" value="20" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>Tech Rate ($/hr)</label>
+                <input type="number" id="techRate" value="165" oninput="calc()">
+            </div>
+            <div class="input-group"></div> <!-- Spacer -->
+
+            <div class="section-title">Install Labor (The "Muscle")</div>
+            <div class="input-group">
+                <label>Electrician Hours</label>
+                <input type="number" id="installHours" value="40" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>Install Rate ($/hr)</label>
+                <input type="number" id="installRate" value="110" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <label>Misc Material ($)</label>
+                <input type="number" id="miscMat" value="500" oninput="calc()">
+            </div>
+            
+            <!-- Print Button -->
+            <div style="grid-column: span 3; margin-top: 10px;">
+                <button onclick="window.print()" class="btn btn-print"><i class="fa-solid fa-print"></i> PRINT PROPOSAL</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th style="width: 100px; text-align: center;">Qty</th>
+                    <th style="text-align: right;">Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Cypher Core X1 Controller</strong><br>
+                        <small>Primary logic controller, web server, and database host.</small>
+                    </td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: right;" id="outCore">$1,200.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Cypher OS Site License</strong><br>
+                        <small>Unlimited points license, user interface, and local history database.</small>
+                    </td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: right;" id="outOS">$1,500.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Cypher I/O Expansion & Sensors</strong><br>
+                        <small>Interface cards and sensors for <span id="outUnitsCount">5</span> zones.</small>
+                    </td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: right;" id="outIO">$500.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Electrical Installation (Field Wiring)</strong><br>
+                        <small>Running conduit, pulling communication wire, mounting sensors, and termination.</small>
+                    </td>
+                    <td style="text-align: center;" id="outInstallHours">40 hrs</td>
+                    <td style="text-align: right;" id="outInstallTotal">$4,900.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Professional Services</strong><br>
+                        <small>Engineering, programming, graphics, start-up, and commissioning.</small>
+                    </td>
+                    <td style="text-align: center;" id="outTechHours">20 hrs</td>
+                    <td style="text-align: right;" id="outTechTotal">$3,300.00</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="2" style="text-align: right;">PROJECT TOTAL</td>
+                    <td style="text-align: right;" id="outTotal">$11,400.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background: #f8fafc; padding: 20px; border-left: 4px solid var(--accent);">
+            <strong>Annual Software Maintenance (SMA):</strong> Includes remote tunneling, security patches, and database optimization.
+            <div style="float: right; font-weight: bold;">$600.00 / yr</div>
+        </div>
+
+        <div class="footer">
+            Valid for 30 days. Proprietary technology of Cypher Automation.
+        </div>
     </div>
-</div>
 
 <script>
     document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString();
