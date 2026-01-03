@@ -55,6 +55,7 @@
         .btn-primary:hover { background: #0284c7; }
         .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
         .btn-outline:hover { background: #f1f5f9; color: #333; }
+        .btn-sm { padding: 4px 8px; font-size: 0.75rem; }
         
         /* Knowledge Base Items */
         .kb-item { border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 15px; }
@@ -64,6 +65,11 @@
         .tag-legacy { background: #fef3c7; color: #d97706; }
         .tag-modern { background: #dcfce7; color: #166534; }
         .tag-thick { background: #fee2e2; color: #b91c1c; }
+
+        /* Defaults Table */
+        .defaults-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-top: 10px; }
+        .defaults-table th { text-align: left; color: var(--accent); border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; }
+        .defaults-table td { padding: 4px 0; border-bottom: 1px dashed #e2e8f0; font-family: monospace; }
 
         /* Checkbox Grid */
         .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
@@ -211,6 +217,61 @@
                     <span><i class="fa-solid fa-book-medical"></i> Field Tech Reference</span>
                 </div>
                 <div class="card-body">
+                    
+                    <!-- Updated Defaults Section -->
+                    <div class="kb-item" style="border-color: #cbd5e1;">
+                        <div class="kb-title" style="justify-content: space-between;">
+                            <span><i class="fa-solid fa-key text-cyan-600"></i> Common Defaults</span>
+                            <span class="tag" style="background: #e2e8f0; color: #64748b;">TRY FIRST</span>
+                        </div>
+                        <table class="defaults-table">
+                            <tr><th>Brand</th><th>User</th><th>Pass</th></tr>
+                            <tr><td>Tridium</td><td>admin</td><td>(empty)</td></tr>
+                            <tr><td>Tridium</td><td>tridium</td><td>niagara</td></tr>
+                            <tr><td>Honeywell</td><td>hon</td><td>hon</td></tr>
+                            <tr><td>JCI/FX</td><td>metasys</td><td>metasys</td></tr>
+                            <tr><td>Distech</td><td>admin</td><td>admin</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Vendor Support -->
+                    <div class="kb-item" style="border-color: #cbd5e1;">
+                        <div class="kb-title"><i class="fa-solid fa-headset text-cyan-600"></i> Vendor Support</div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Honeywell:</span> <strong>1-800-466-3993</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>Belimo:</span> <strong>1-800-543-9038</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Johnson Controls:</span> <strong>1-800-275-5276</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Sensor Reference -->
+                    <div class="kb-item" style="border-color: #ef4444;">
+                        <div class="kb-title"><i class="fa-solid fa-temperature-half text-cyan-600"></i> Sensor Reference (77°F)</div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom: 1px dashed #e2e8f0;">
+                                <span>10k Type 2 (Tridium):</span> <strong>10,000 Ω</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px; border-bottom: 1px dashed #e2e8f0;">
+                                <span>10k Type 3 (Andover):</span> <strong>10,000 Ω</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                <span>1k Platinum:</span> <strong>1,097 Ω</strong>
+                            </div>
+                            <div style="background: #fff1f2; padding: 4px; border-radius: 4px; margin-top: 5px; font-size: 0.75rem; color: #9f1239;">
+                                <strong>Tip:</strong> At 32°F (0°C):<br>
+                                Type 2 = 29k Ω | Type 3 = 29k Ω (Close!)<br>
+                                At 100°F:<br>
+                                Type 2 = 6k Ω | Type 3 = 5.3k Ω (Drifts)
+                            </div>
+                        </div>
+                    </div>
+
                     <h2><i class="fa-solid fa-network-wired text-cyan-600"></i> Standard Ports</h2>
                     <div class="kb-item" style="border-color: #f59e0b;">
                         <div class="kb-title">BACnet / IP</div>
@@ -225,20 +286,6 @@
                         <div class="kb-detail">TCP Port <strong>1911</strong> (Secure: 4911)</div>
                     </div>
 
-                    <h2 style="margin-top: 20px;"><i class="fa-solid fa-user-lock text-cyan-600"></i> Access Methods</h2>
-                    <div class="kb-item">
-                        <div class="kb-title">N4 / Distech / WebCTRL <span class="tag tag-modern">HTML5</span></div>
-                        <div class="kb-detail">Use Chrome/Edge. Type IP Address (https://). Accept SSL warning.</div>
-                    </div>
-                    <div class="kb-item">
-                        <div class="kb-title">AX / Old Honeywell <span class="tag tag-legacy">JAVA</span></div>
-                        <div class="kb-detail">Modern browsers block this. Use IE Mode in Edge or the "Web Launcher" tool.</div>
-                    </div>
-                    <div class="kb-item">
-                        <div class="kb-title">Siemens / Metasys <span class="tag tag-thick">THICK</span></div>
-                        <div class="kb-detail">Requires proprietary software installed on laptop + USB key/dongle.</div>
-                    </div>
-                    
                     <button onclick="openGuide()" class="btn btn-outline" style="width: 100%; margin-top: 15px; justify-content: center;">
                         <i class="fa-solid fa-laptop-medical"></i> Open Connection Guide
                     </button>
@@ -290,7 +337,7 @@
                         </div>
                         <div class="checkbox-grid">
                             <label class="checkbox-item"><input type="checkbox"> Check-in w/ FM</label>
-                            <label class="checkbox-item"><input type="checkbox"> Review Error Logs</label>
+                            <label class="checkbox-item"><input type="checkbox"> <strong>Take "Before" Photos</strong></label>
                             <label class="checkbox-item"><input type="checkbox"> <strong>BACKUP DATABASE</strong></label>
                             <label class="checkbox-item"><input type="checkbox"> Verify LOTO</label>
                         </div>
@@ -362,17 +409,46 @@
                     </p>
                 </div>
 
+                <!-- ADDED SECTION: DISCOVERY -->
+                <div class="step-box" style="border-left: 4px solid #f59e0b;">
+                    <div class="step-title" style="color: #d97706;"><i class="fa-solid fa-magnifying-glass"></i> Unknown IP? How to find it (Discovery)</div>
+                    <p style="font-size: 0.9rem; color: #333; margin-bottom: 8px;">
+                        If the IP is not labeled on the panel door or controller:
+                    </p>
+                    <ul style="font-size: 0.85rem; padding-left: 20px; color: #475569; margin-bottom: 0;">
+                        <li><strong>Physical Check:</strong> Look for a sticker on the JACE/Controller casing.</li>
+                        <li><strong>Wireshark (Best):</strong> Install Wireshark. Connect to the port. Filter by <code>arp</code>. Watch for broadcast traffic ("Who has?"). The source IP is likely the controller or gateway.</li>
+                        <li><strong>Command Prompt:</strong> Run <code>arp -a</code> to see devices your laptop has recently talked to (only works if on same subnet).</li>
+                    </ul>
+                </div>
+
                 <div class="step-box">
                     <div class="step-title"><i class="fa-solid fa-2"></i> Laptop IP Configuration</div>
-                    <p style="font-size: 0.9rem; color: #333;">
-                        Most BAS networks use Static IPs. Do not use DHCP unless confirmed.
-                        <br><strong>Windows:</strong> <code>Control Panel > Network > Adapter Settings > IPv4</code>
+                    <p style="font-size: 0.9rem; color: #333; margin-bottom: 8px;">
+                        Most BAS networks use Static IPs. <strong>Do not use DHCP</strong> unless confirmed.
                     </p>
+                    <div style="margin-bottom: 10px;">
+                        <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 4px;">Method A: The Shortcut (Fastest)</div>
+                        <ol style="font-size: 0.85rem; padding-left: 20px; color: #475569; margin-top: 0;">
+                            <li>Press <code>Win + R</code>, type <code>ncpa.cpl</code>, hit Enter.</li>
+                        </ol>
+                        
+                        <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 4px; margin-top: 8px;">Method B: Windows Search</div>
+                        <ol style="font-size: 0.85rem; padding-left: 20px; color: #475569; margin-top: 0;">
+                            <li>Press <strong>Start</strong> (Windows Key).</li>
+                            <li>Type <strong>"View network connections"</strong> and hit Enter.</li>
+                        </ol>
+                    </div>
+
+                    <div style="font-size: 0.85rem; padding-left: 5px; color: #475569; border-left: 2px solid #cbd5e1; margin-bottom: 10px;">
+                        <strong>Next Steps:</strong> Right-click <strong>Ethernet</strong> &rarr; Properties &rarr; Select <strong>IPv4</strong> &rarr; Properties &rarr; "Use the following IP address".
+                    </div>
+
                     <div style="font-size: 0.85rem; background: #e2e8f0; padding: 8px; margin-top: 5px; border-radius: 4px;">
-                        <strong>Example:</strong><br>
-                        Controller IP: 192.168.1.140<br>
-                        Set Laptop IP: <strong>192.168.1.200</strong><br>
-                        Subnet Mask: 255.255.255.0
+                        <strong>Example Configuration:</strong><br>
+                        Target Controller IP: <span style="color: #ef4444;">192.168.1.140</span><br>
+                        Set Laptop IP: <strong>192.168.1.200</strong> (Last octet must be unique)<br>
+                        Subnet Mask: <strong>255.255.255.0</strong>
                     </div>
                 </div>
 
